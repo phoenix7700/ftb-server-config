@@ -1,0 +1,8 @@
+*.class
+*.log
+*.lck
+crash-reports/
+hats/
+libraries/
+mods/
+world/
