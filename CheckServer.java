@@ -65,7 +65,7 @@ public class CheckServer {
 				if (failCount >= 10) {
 					try {
 						//System.out.println("Restart");
-						String command[] = { "/bin/bash", "service", "minecraft", "restart" };
+						String command[] = { "/bin/bash", "/sbin/service", "minecraft", "restart" };
 						
 						Process	restartProcess = Runtime.getRuntime().exec(command);
 						restartProcess.waitFor();

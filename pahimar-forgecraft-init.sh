@@ -20,11 +20,10 @@ USERNAME="ftbuser"
 SERVICE='FTBServer-1.6.4-965.jar'
 MCPATH="/home/$USERNAME/minecraft"
 BACKUPPATH="/home/$USERNAME/backup"
-CHECKSERVER="/home/$USERNAME/CheckServer"
+CHECKSERVER="$MCPATH/CheckServer"
 CRASHLOG_DB_PATH='/var/log/minecraft'
 JAVA_HOME="/usr/java/latest"
 
-# JAVA_OPTS="-Xmx6G -Xms6G -Xmn1500M -XX:PermSize=256M -XX:+AggressiveOpts -XX:+UseConcMarkSweepGC -XX:+UseNUMA -XX:+UseParallelGC -XX:+OptimizeStringConcat -XX:+UseStringCache -XX:+TieredCompilation -XX:+UseFastAccessorMethods -XX:+UseLargePages -XX:TargetSurvivorRatio=80 -XX:MaxGCPauseMillis=10 -XX:GCPauseIntervalMillis=50 -XX:MaxGCMinorPauseMillis=7 -XX:+ExplicitGCInvokesConcurrent -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=60 -XX:+BindGCTaskThreadsToCPUs -Xnoclassgc -XX:NewRatio=3 -XX:MaxTenuringThreshold=8 -XX:MaxPermSize=256m"
 JAVA_OPTS="-Xms6G -Xmx6G -XX:PermSize=256m -XX:+AggressiveOpts -XX:+OptimizeStringConcat -XX:+UseStringCache -XX:+TieredCompilation -XX:+UseFastAccessorMethods -XX:+UseLargePages -XX:NewRatio=3 -XX:SurvivorRatio=3 -XX:TargetSurvivorRatio=80 -XX:MaxTenuringThreshold=8 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:MaxGCPauseMillis=10 -XX:GCPauseIntervalMillis=50 -XX:MaxGCMinorPauseMillis=7 -XX:+ExplicitGCInvokesConcurrent -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=60 -XX:+BindGCTaskThreadsToCPUs -Xnoclassgc"
 
 INVOCATION="${JAVA_HOME}/bin/java ${JAVA_OPTS} -jar $SERVICE nogui"
@@ -92,10 +91,7 @@ mc_start() {
 mc_startmonitor() {
 	if [ -z $CHECKSERVER ]; then
 		echo "started monitor"
-		/usr/sbin/daemonize \
-					-p /home/$USERNAME/minecraft_checkserver.pid \
-					-l /home/$USERNAME/minecraft_checkserver.lck \
-					$JAVA_HOME/bin/java -cp $CHECKSERVER CheckServer localhost $PORT		
+		/usr/sbin/daemonize -p /home/$USERNAME/minecraft_checkserver.pid -l /home/$USERNAME/minecraft_checkserver.lck $JAVA_HOME/bin/java -cp $CHECKSERVER CheckServer localhost $PORT		
 	fi
 }
 
@@ -173,7 +169,7 @@ mc_stop() {
 mc_stopmonitor() {
 	if [ -z $CHECKSERVER ]; then
 		kill $(cat /home/$USERNAME/minecraft_checkserver.pid)
-		sleep 1
+		sleep 2
 		kill -9 $(cat /home/$USERNAME/minecraft_checkserver.pid)
 		rm -f /home/$USERNAME/minecraft_checkserver.pid /home/$USERNAME/minecraft_checkserver.lck
 	fi
@@ -190,7 +186,7 @@ mc_backup() {
 }
 
 mc_thinoutbackup() {
-	if (($(date +%H) == 0)) && (($(date +%M) < 15)); then
+	if (($(date +%k) == 0)) && (($(date +%M) < 15)); then
 		archivedate=$(date --date="7 days ago")
 		
 		echo "Thinning backups created $archivedate out"
