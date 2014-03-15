@@ -1,3 +1,4 @@
+#!/bin/bash
 USERNAME=$1
 XSTOP=$2
 YSTOP=$3
