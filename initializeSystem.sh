@@ -1,9 +1,18 @@
 #!/bin/bash
+
 USERNAME="ftbuser"
+
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
 if [ -f pahimar-forgecraft-init.sh ]; then
 	chmod +x pahimar-forgecraft-init.sh
 	ln -if /home/$USERNAME/minecraft/pahimar-forgecraft-init.sh /etc/init.d/minecraft
 fi
+
+rm -f StartServer.bat StartServer.sh
 
 javac CheckServer.java
 chown ftbuser:ftbuser CheckServer.class
