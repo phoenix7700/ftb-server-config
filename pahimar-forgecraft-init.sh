@@ -23,8 +23,9 @@ BACKUPPATH="/home/$USERNAME/backup"
 CHECKSERVER="$MCPATH/CheckServer"
 CRASHLOG_DB_PATH='/var/log/minecraft'
 JAVA_HOME="/usr/java/latest"
+JAVA_MEM="-Xms7G -Xmx7G -XX:PermSize=256m"
 
-JAVA_OPTS="-Xms6G -Xmx6G -XX:PermSize=256m -XX:+AggressiveOpts -XX:+OptimizeStringConcat -XX:+UseStringCache -XX:+TieredCompilation -XX:+UseFastAccessorMethods -XX:+UseLargePages -XX:NewRatio=3 -XX:SurvivorRatio=3 -XX:TargetSurvivorRatio=80 -XX:MaxTenuringThreshold=8 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:MaxGCPauseMillis=10 -XX:GCPauseIntervalMillis=50 -XX:MaxGCMinorPauseMillis=7 -XX:+ExplicitGCInvokesConcurrent -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=60 -XX:+BindGCTaskThreadsToCPUs -Xnoclassgc"
+JAVA_OPTS="$JAVA_MEM -XX:+AggressiveOpts -XX:+OptimizeStringConcat -XX:+UseStringCache -XX:+TieredCompilation -XX:+UseFastAccessorMethods -XX:+UseLargePages -XX:NewRatio=3 -XX:SurvivorRatio=3 -XX:TargetSurvivorRatio=80 -XX:MaxTenuringThreshold=8 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:MaxGCPauseMillis=10 -XX:GCPauseIntervalMillis=50 -XX:MaxGCMinorPauseMillis=7 -XX:+ExplicitGCInvokesConcurrent -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=60 -XX:+BindGCTaskThreadsToCPUs -Xnoclassgc"
 
 INVOCATION="${JAVA_HOME}/bin/java ${JAVA_OPTS} -jar $SERVICE nogui"
 BACKUPARCHIVEPATH=$BACKUPPATH/archive
@@ -63,8 +64,7 @@ mc_start() {
 		echo "$SERVICE was not running... starting."
 		
 		cd $MCPATH
-		echo "Changing path to $MCPATH"
-		echo "Running command screen -dmS mc$PORT $INVOCATION &"
+		# echo "Running command screen -dmS mc$PORT $INVOCATION &"
 		screen -dmS mc$PORT $INVOCATION &
 		
 		for (( i=0; i < 10; i++ )); do
